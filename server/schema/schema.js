@@ -9,13 +9,21 @@ const books = [
     {name: 'The Long Earth', genre: 'Sci-Fi', id: '3'}
 ]
 
+// Dummy data for authors
+const authors =  [
+    {name: 'Patrick Rothfuss', age: 44, id:"1"},
+    {name: 'Brandon Sanderson', age: 42, id:"2"},
+    {name: 'Terry Pratchett', age: 66, id:"3"},
+  ]
+
 
 // Define type.
 const {
     GraphQLObjectType,
     GraphQLString,
     GraphQLSchema,
-    GraphQLID
+    GraphQLID,
+    GraphQLInt
 } = graphql;
 
 const BookType = new GraphQLObjectType({
@@ -26,6 +34,17 @@ const BookType = new GraphQLObjectType({
         id: {type: GraphQLID},
         name: {type: GraphQLString},
         genre: {type: GraphQLString}
+    })
+});
+
+const AuthorType = new GraphQLObjectType({
+    name: 'Author',
+
+    // Fields need to have a function value.
+    fields: () => ({
+        id: {type: GraphQLID},
+        name: {type: GraphQLString},
+        age: {type: GraphQLInt}
     })
 });
 
@@ -51,6 +70,15 @@ const RootQuery = new GraphQLObjectType({
                 // CODE TO GET DATA FROM DB / OTHER SOURCE
                 // we return what we want to send back.
                 return _.find(books, {id: args.id});
+            }
+        },
+
+        // Author query
+        author: {
+            type: AuthorType,
+            args: {id: {type: GraphQLID}},
+            resolve(parent, args){
+                return _.find(authors, {id: args.id});
             }
         }
     }
