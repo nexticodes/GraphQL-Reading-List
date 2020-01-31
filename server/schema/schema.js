@@ -11,14 +11,19 @@ const books = [
 
 
 // Define type.
-const {GraphQLObjectType, GraphQLString, GraphQLSchema} = graphql;
+const {
+    GraphQLObjectType,
+    GraphQLString,
+    GraphQLSchema,
+    GraphQLID
+} = graphql;
 
 const BookType = new GraphQLObjectType({
     name: 'Book',
 
     // Fields need to have a function value.
     fields: () => ({
-        id: {type: GraphQLString},
+        id: {type: GraphQLID},
         name: {type: GraphQLString},
         genre: {type: GraphQLString}
     })
@@ -41,7 +46,7 @@ const RootQuery = new GraphQLObjectType({
             // Type of data is a BookType.
             // Having args mean that the query will require arguments to be passed along.
             type: BookType,
-            args: {id: {type: GraphQLString}},
+            args: {id: {type: GraphQLID}},
             resolve(parent, args){
                 // CODE TO GET DATA FROM DB / OTHER SOURCE
                 // we return what we want to send back.
