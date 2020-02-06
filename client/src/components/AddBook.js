@@ -4,7 +4,7 @@ import {graphql} from 'react-apollo';
 // Because compose has been removed from react-apollo and compose is basically the same as flowRight from lodash..
 import {flowRight as compose} from 'lodash';
 
-import {getAuthorsQuery, addBookMutation} from './../queries/queries';
+import {getAuthorsQuery, addBookMutation, getBooksQuery} from './../queries/queries';
 
 function AddBook(props) {
 
@@ -37,7 +37,10 @@ function AddBook(props) {
                 name: name,
                 genre: genre,
                 authorId: authorId
-            }
+            },
+            // Refetch gets fired after the mutation.
+            // Each element is an object with a query property with a query as a value.
+            refetchQueries: [{ query: getBooksQuery}]
         });
     }
 
