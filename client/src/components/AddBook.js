@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
 import {graphql} from 'react-apollo';
 
-import {getAuthorsQuery} from './../queries/queries';
+// Because compose has been removed from react-apollo and compose is basically the same as flowRight from lodash..
+import {flowRight as compose} from 'lodash';
+
+import {getAuthorsQuery, addBookMutation} from './../queries/queries';
 
 function AddBook(props) {
 
@@ -11,7 +14,7 @@ function AddBook(props) {
     const [authorId, setAuthorId] = useState('');
 
     const displayAuthors = () => {
-        let data = props.data;
+        let data = props.getAuthorsQuery;
         if (data.loading){
             return (
                 <option>Loading Authors...</option>
@@ -25,7 +28,7 @@ function AddBook(props) {
 
     const submitForm = e => {
         e.preventDefault();
-        console.log(`${name}, ${genre}, ${authorId}`);
+        props.addBookMutation();
     }
 
     return (
@@ -56,4 +59,11 @@ function AddBook(props) {
 }
 
 // GraphQL binds getAuthorsQuery to AddBook component.
-export default graphql(getAuthorsQuery)(AddBook);
+// Only for one query.
+// export default graphql(getAuthorsQuery)(AddBook);
+
+// IF MULTIPLE QUERIES, USE COMPOSE LIKE SO.
+export default compose(
+    graphql(getAuthorsQuery, { name: "getAuthorsQuery"}),
+    graphql(addBookMutation, { name: "addBookMutation"})
+)(AddBook);
